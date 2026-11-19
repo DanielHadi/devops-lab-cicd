@@ -1,6 +1,7 @@
 services:
   api:
     image: ghcr.io/danielhadi/devops-api:latest
+    platfor: linux/amd64
     container_name: dotnet-backend
     restart: always
 
