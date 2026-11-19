@@ -18,6 +18,9 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
+      - name: Set lowercase username
+        run: echo "OWNER_LC=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
@@ -30,12 +33,12 @@ jobs:
           dotnet build --no-restore --configuration Release
 
       - name: Build Docker Image
-        run: docker build -t ghcr.io/${{ github.actor }}/devops-api:latest ./DevOpsApi
+        run: docker build -t ghcr.io/${{ env.OWNER_LC }}/devops-api:latest ./DevOpsApi
 
       - name: Run Trivy Vulnerability Scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'ghcr.io/${{ github.actor }}/devops-api:latest'
+          image-ref: 'ghcr.io/${{ env.OWNER_LC }}/devops-api:latest'
           format: 'table'
           exit-code: '0'
           ignore-unfixed: true
@@ -50,4 +53,4 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Docker Image to GHCR
-        run: docker push ghcr.io/${{ github.actor }}/devops-api:latest
+        run: docker push ghcr.io/${{ env.OWNER_LC }}/devops-api:latest
