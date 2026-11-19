@@ -20,6 +20,7 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore & Build
+        working-directory: ./DevOpsApi
         run: |
           dotnet restore
           dotnet build --no-restore --configuration Release
